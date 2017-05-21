@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 import {List, ListItem, makeSelectable} from 'material-ui'
 import DashboardIcon from 'material-ui/svg-icons/action/dashboard'
 import AccountIcon from 'material-ui/svg-icons/action/euro-symbol'
+import BudgetIcon from 'material-ui/svg-icons/editor/monetization-on'
 import { routerActions } from 'react-router-redux'
 
 let SelectableList = makeSelectable(List)
@@ -18,6 +19,7 @@ export default class Sidebar extends React.Component {
       <SelectableList className={this.props.className} value={this.props.location.pathname} onChange={(event, value) => this.goTo(value)}>
         <ListItem value="/dashboard" primaryText="Dashboard" leftAvatar={<DashboardIcon />} />
         <ListItem value="/accounts" id="Accounts" primaryText="Accounts" leftAvatar={<AccountIcon />}/>
+        <ListItem value="/budgets" id="Budgets" primaryText="Budgets" leftAvatar={<BudgetIcon />}/>
       </SelectableList>
     )
   }

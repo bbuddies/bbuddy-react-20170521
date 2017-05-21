@@ -5,7 +5,7 @@ import present from '../presenters/budgetsPagePresenter'
 @present
 export default class BudgetsPage extends React.Component {
   render() {
-    const {goToAddBudget} = this.props
+    const {budgets, goToAddBudget} = this.props
     return (
       <Card>
         <CardTitle title='Budgets'/>
@@ -18,10 +18,12 @@ export default class BudgetsPage extends React.Component {
               </TableRow>
             </TableHeader>
             <TableBody showRowHover={true} stripedRows={true}>
-                <TableRow key={0}>
-                  <TableRowColumn>{'2017-05'}</TableRowColumn>
-                  <TableRowColumn>{1000}</TableRowColumn>
+              {budgets.map((budget, index) => (
+                <TableRow key={index}>
+                  <TableRowColumn>{budget.month}</TableRowColumn>
+                  <TableRowColumn>{budget.amount}</TableRowColumn>
                 </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardText>

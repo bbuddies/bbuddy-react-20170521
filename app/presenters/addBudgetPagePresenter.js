@@ -2,6 +2,7 @@ import present from './presenter'
 import {bindActionCreators} from 'redux'
 import merge from 'lodash/merge'
 import * as NavigationActions from '../actions/navigation'
+import * as BudgetActions from '../actions/budget'
 
 export class AddBudgetPagePresenter {
   constructor(props){
@@ -10,7 +11,13 @@ export class AddBudgetPagePresenter {
   loadData(){
   }
   getProps(){
-    return this.props
+    return {
+      ...this.props,
+      save: budget => this.save(budget)
+    }
+  }
+  save(budget){
+    this.props.addBudget(budget, () => {this.props.goBack()})
   }
 
   static mapStateToProps(state) {
@@ -19,7 +26,7 @@ export class AddBudgetPagePresenter {
   }
 
   static mapDispatchToProps(dispatch) {
-    return bindActionCreators(merge({}, NavigationActions), dispatch)
+    return bindActionCreators(merge({}, BudgetActions, NavigationActions), dispatch)
   }
 }
 

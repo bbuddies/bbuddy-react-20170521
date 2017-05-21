@@ -5,7 +5,9 @@ import present from '../presenters/addBudgetPagePresenter'
 @present
 export default class AddBudgetPage extends React.Component {
   save(){
-    this.props.goBack()
+    const month = this.refs.month.getValue()
+    const amount = this.refs.amount.getValue()
+    this.props.save({month, amount})
   }
   render() {
     return (

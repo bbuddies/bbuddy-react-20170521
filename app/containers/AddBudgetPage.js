@@ -1,11 +1,11 @@
 import React from 'react';
 import {Card, CardTitle, CardText, CardActions, RaisedButton, TextField} from 'material-ui'
-// import present from '../presenters/addAccountPagePresenter'
+import present from '../presenters/addBudgetPagePresenter'
 
-
-// @present
+@present
 export default class AddBudgetPage extends React.Component {
   save(){
+    this.props.goBack()
   }
   render() {
     return (

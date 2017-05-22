@@ -21,9 +21,9 @@ export class QueryBudgetsPagePresenter {
     }
   }
 
-  query(startDate, endDate) {
+  query(queryDateRange) {
     var that = this;
-    this.props.queryBudgets(startDate, endDate, (amount) => {
+    this.props.queryBudgets(queryDateRange, (amount) => {
       that.message = amount
       that.update()
     })

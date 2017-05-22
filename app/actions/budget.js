@@ -55,22 +55,18 @@ export function loadBudgets(callback){
   }
 }
 
-export function queryBudgets(paramObj, paramObj2, callback) {
+export function queryBudgets(queryDateRange, callback) {
   return (dispatch, getState) => {
     dispatch(fetchBudgets()).then(() => {
-      let budgets = values(getState().entities.budgets);
-
-      let startDate = paramObj.startDate;
-      let endDate = paramObj.endDate;
+      const budgets = values(getState().entities.budgets);
+      const {startDate, endDate} = queryDateRange;
 
       let sum = 0
-      let index = 0
-      const lengthOfBudgets = budgets.length
       budgets.forEach(({ month, amount }, index) => {
-        var budgetMonth = moment(month, 'YYYY-MM');
+        let budgetMonth = moment(month, 'YYYY-MM');
 
-        var startDateMoment = moment(startDate, 'YYYY-MM-DD')
-        var endDateMoment = moment(endDate, 'YYYY-MM-DD')
+        let startDateMoment = moment(startDate, 'YYYY-MM-DD')
+        let endDateMoment = moment(endDate, 'YYYY-MM-DD')
         
         if (!budgetMonth.isBetween(startDateMoment, endDateMoment, 'days', '[]')) {
           return;

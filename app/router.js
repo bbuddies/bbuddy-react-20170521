@@ -10,6 +10,7 @@ import AccountsPage from './containers/AccountsPage'
 import AddAccountPage from './containers/AddAccountPage'
 import BudgetsPage from './containers/BudgetsPage'
 import AddBudgetPage from './containers/AddBudgetPage'
+import QueryBudgetsPage from './containers/QueryBudgetsPage'
 
 export default ({store}) => {
   const enhancedHistory = syncHistoryWithStore(history, store)
@@ -24,6 +25,7 @@ export default ({store}) => {
           <Route path="accounts/add" component={AddAccountPage}/>
           <Route path="budgets" component={BudgetsPage}/>
           <Route path="budgets/add" component={AddBudgetPage}/>
+          <Route path="budgets/query" component={QueryBudgetsPage}/>
         </Route>
       </Route>
     </Router>

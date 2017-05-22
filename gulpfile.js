@@ -9,7 +9,7 @@ var mocha = require("gulp-mocha");
 
 const dev = !process.argv.includes('--production')
 
-gulp.task("default", ["server", "mocha"], function () {
+gulp.task("default", ["build", "server", "mocha"], function () {
     gulp.watch(["app/**/*", "sass/**/*"], ["build"]);
     gulp.watch(["app/**/*", "test/**/*.js"], ["mocha"]);
 });
@@ -33,9 +33,10 @@ gulp.task("build", function (callback) {
 });
 
 gulp.task("server", function (callback) {
+    let port = dev ? 8101 : 8100;
     new WebpackDevServer(webpack(webpackConfig(dev)))
-        .listen(8100, "localhost", function (err) {
+        .listen(port, "localhost", function (err) {
             if (err) throw new gutil.PluginError("webpack-dev-server", err);
-            gutil.log("[webpack-dev-server]", "http://localhost:8100/");
+            gutil.log("[webpack-dev-server]", "http://localhost:/" + port);
         });
 });

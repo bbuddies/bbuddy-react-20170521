@@ -5,10 +5,14 @@ import present from '../presenters/budgetsPagePresenter'
 @present
 export default class BudgetsPage extends React.Component {
   render() {
-    const {budgets, goToAddBudget} = this.props
+    const {budgets, goToAddBudget, goToQueryBudget} = this.props
     return (
       <Card>
         <CardTitle title='Budgets'/>
+        <CardActions>
+          <RaisedButton label='Add' primary={true} onTouchTap={() => {goToAddBudget()}}/>
+          <RaisedButton label='Query' primary={true} onTouchTap={() => {goToQueryBudget()}}/>
+        </CardActions>
         <CardText>
           <Table height='500px' fixedHeader={true} >
             <TableHeader>
@@ -27,9 +31,6 @@ export default class BudgetsPage extends React.Component {
             </TableBody>
           </Table>
         </CardText>
-        <CardActions>
-          <RaisedButton label='Add' primary={true} onTouchTap={() => {goToAddBudget()}}/>
-        </CardActions>
       </Card>
     )
   }

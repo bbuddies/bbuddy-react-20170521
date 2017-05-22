@@ -17,3 +17,9 @@ export function goToAddBudget(){
     dispatch(push('/budgets/add'))
   }
 }
+
+export function goToQueryBudget(){
+  return (dispatch, getState) => {
+    dispatch(push('/budgets/query'))
+  }
+}

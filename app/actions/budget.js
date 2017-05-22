@@ -2,6 +2,7 @@ import { CALL_API } from '../middleware/api'
 import * as BudgetConstants from '../constants/budget'
 import {Budget, BudgetList} from '../schemas'
 import {find, merge, values } from 'lodash'
+import moment from 'moment'
 
 export function createBudget(budget){
   return {
@@ -59,35 +60,34 @@ export function queryBudgets(paramObj, paramObj2, callback) {
     dispatch(fetchBudgets()).then(() => {
       let budgets = values(getState().entities.budgets);
 
-// console.log('============')
-//     console.log('paramObj', paramObj)
-//     console.log('paramObj2', paramObj2)
+      let startDate = paramObj.startDate;
+      let endDate = paramObj.endDate;
 
-    let startDate = paramObj.startDate;
-    let endDate = paramObj.endDate;
-
-    // console.log('startDate', startDate)
-    // console.log('endDate', endDate)
-    
       let sum = 0
+      let index = 0
       const lengthOfBudgets = budgets.length
       budgets.forEach(({ month, amount }, index) => {
-        console.log("month", month);
-        console.log("amount", amount);
-        if (new Date(month) - new Date(startDate) >= 0 && new Date(month) - new Date(endDate) <= 0) {
-          console.log("flag 1");
-          if (index === 0) 
-            sum += (new Date(startDate).getDate() / 30) * amount
-          else if (index === lengthOfBudgets - 1) 
-            sum += (new Date(endDate).getDate() / 30) * amount
-          else 
-            sum += amount
-          }
+        var budgetMonth = moment(month, 'YYYY-MM');
+
+        var startDateMoment = moment(startDate, 'YYYY-MM-DD')
+        var endDateMoment = moment(endDate, 'YYYY-MM-DD')
+        
+        if (!budgetMonth.isBetween(startDateMoment, endDateMoment, 'days', '[]')) {
+          return;
+        }
+
+        if (startDateMoment.diff(budgetMonth, 'months') == 0 && endDateMoment.diff(budgetMonth, 'months') == 0) {
+          sum += (endDateMoment.diff(startDateMoment, 'days') + 1) / budgetMonth.daysInMonth() * amount;
+        } else if (startDateMoment.diff(budgetMonth, 'months') == 0 && endDateMoment.diff(budgetMonth, 'months') > 0) {
+          sum += amount;
+        } else if (startDateMoment.diff(budgetMonth, 'months') < 0 && endDateMoment.diff(budgetMonth, 'months') == 0) {
+          sum += (endDateMoment.date() / endDateMoment.daysInMonth()) * amount;
+        } else if (startDateMoment.diff(budgetMonth, 'months') < 0 && endDateMoment.diff(budgetMonth, 'months') > 0) {
+          sum += amount;
+        }
       })
       
-      //var amount = 3000;
-      console.log('sum', sum);
-      callback(sum);
+      callback(parseInt(sum));
     })
   }
 }

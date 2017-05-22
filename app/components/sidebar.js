@@ -20,7 +20,6 @@ export default class Sidebar extends React.Component {
         <ListItem value="/dashboard" primaryText="Dashboard" leftAvatar={<DashboardIcon />} />
         <ListItem value="/accounts" id="Accounts" primaryText="Accounts" leftAvatar={<AccountIcon />}/>
         <ListItem value="/budgets" id="Budgets" primaryText="Budgets" leftAvatar={<BudgetIcon />}/>
-        <ListItem value="/budgets/query" id="BudgetSummary" primaryText="Budgets" leftAvatar={<BudgetIcon />}/>
       </SelectableList>
     )
   }

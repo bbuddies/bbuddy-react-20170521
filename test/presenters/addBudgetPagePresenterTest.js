@@ -17,4 +17,30 @@ describe('AddBudgetPagePresenter', () => {
       goBackSpy.should.be.called
     })
   })
+
+  context('Valid input', () => {
+
+    it('valid amount > 0', () => {
+      let props = {addBudget: () => {}, updateBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
+      let addBudgetSpy = sinon.stub(props, 'addBudget').yields()
+      let goBackSpy = sinon.spy(props, 'goBack')
+      let presenter = new AddBudgetPagePresenter(props)
+
+      presenter.save({month:'2017-05', amount: -100})
+
+      addBudgetSpy.should.not.be.called
+      goBackSpy.should.not.be.called
+    })
+
+    it('show alert message', () => {
+       let props = {addBudget: () => {}, updateBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
+      let addBudgetSpy = sinon.stub(props, 'addBudget').yields()
+      let goBackSpy = sinon.spy(props, 'goBack')
+      let presenter = new AddBudgetPagePresenter(props)
+
+      presenter.save({month:'2017-05', amount: -100})
+
+      presenter.getProps().message.should.be.equal('invalid amount value')
+    })
+  })
 })

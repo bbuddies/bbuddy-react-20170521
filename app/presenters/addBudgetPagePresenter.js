@@ -1,10 +1,8 @@
-import present from './presenter'
-import {bindActionCreators} from 'redux'
-import merge from 'lodash/merge'
-import values from 'lodash/values'
-import * as NavigationActions from '../actions/navigation'
-import * as BudgetActions from '../actions/budget'
-import {loadBudgets} from '../api'
+import present from "./presenter";
+import {bindActionCreators} from "redux";
+import merge from "lodash/merge";
+import * as NavigationActions from "../actions/navigation";
+import * as BudgetActions from "../actions/budget";
 
 export class AddBudgetPagePresenter {
   constructor(props){
@@ -15,11 +13,17 @@ export class AddBudgetPagePresenter {
   getProps(){
     return {
       ...this.props,
+      message: this.message,
       save: budget => this.save(budget)
     }
   }
   save(budget){
-    this.props.addBudget(budget, () => {this.props.goBack()})
+    if (parseInt(budget.amount) > 0)
+      this.props.addBudget(budget, () => {this.props.goBack()})
+    else {
+      this.message = 'invalid amount value'
+      this.update()
+    }
   }
 
   static mapStateToProps(state) {

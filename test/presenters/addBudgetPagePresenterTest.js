@@ -4,7 +4,7 @@ describe('AddBudgetPagePresenter', () => {
   context('Add budget', () => {
     let addBudgetSpy, goBackSpy
     beforeEach(() => {
-      let props = {addBudget: () => {}, updateBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
+      let props = {addBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
       addBudgetSpy = sinon.stub(props, 'addBudget').yields()
       goBackSpy = sinon.spy(props, 'goBack')
       let presenter = new AddBudgetPagePresenter(props)
@@ -19,9 +19,12 @@ describe('AddBudgetPagePresenter', () => {
   })
 
   context('Valid input', () => {
+    beforeEach(() => {
+      AddBudgetPagePresenter.prototype.update = () => {};
+    })
 
     it('valid amount > 0', () => {
-      let props = {addBudget: () => {}, updateBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
+      let props = {addBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
       let addBudgetSpy = sinon.stub(props, 'addBudget').yields()
       let goBackSpy = sinon.spy(props, 'goBack')
       let presenter = new AddBudgetPagePresenter(props)
@@ -33,7 +36,7 @@ describe('AddBudgetPagePresenter', () => {
     })
 
     it('show alert message', () => {
-       let props = {addBudget: () => {}, updateBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
+      let props = {addBudget: () => {}, goBack: () => {}, loadBudgets: () => {}}
       let addBudgetSpy = sinon.stub(props, 'addBudget').yields()
       let goBackSpy = sinon.spy(props, 'goBack')
       let presenter = new AddBudgetPagePresenter(props)

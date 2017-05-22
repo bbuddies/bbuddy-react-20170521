@@ -4,15 +4,36 @@ import present from '../presenters/addBudgetPagePresenter'
 
 @present
 export default class AddBudgetPage extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      alertMessage: ''
+    };
+  }
+
   save(){
     const month = this.refs.month.getValue()
     const amount = this.refs.amount.getValue()
+
+    if (parseInt(amount) < 0) {
+      this.setState({
+        alertMessage: 'invalid amount value'
+      });
+
+      return;
+    }
     this.props.save({month, amount})
   }
   render() {
+    let alertMessage = null;
+    if (this.state.alertMessage) {
+      alertMessage = <CardTitle title={this.state.alertMessage}/>
+    } 
+
     return (
       <Card>
         <CardTitle title='Add Budget'/>
+        {alertMessage}
         <CardText>
           <TextField fullWidth={true} id="month" ref="month" hintText="Month" floatingLabelText="Name" autoFocus />
           <TextField fullWidth={true} id="amount" ref="amount" hintText="Amount" floatingLabelText="Balance" />

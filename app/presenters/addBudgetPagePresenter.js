@@ -17,6 +17,7 @@ export class AddBudgetPagePresenter {
       save: budget => this.save(budget)
     }
   }
+  
   save(budget){
     var currentBudgets = values(this.props.loadBudgets());
 
@@ -27,13 +28,12 @@ export class AddBudgetPagePresenter {
         break;
       }
     }
-    //var 
+
     if (budgetIsExisting) {
       this.props.updateBudget(budget, () => {this.props.goBack()})           
     } else {
       this.props.addBudget(budget, () => {this.props.goBack()}) 
     }
-    
   }
 
   static mapStateToProps(state) {

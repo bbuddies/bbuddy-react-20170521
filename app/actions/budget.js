@@ -62,26 +62,33 @@ export function queryBudgets(queryDateRange, callback) {
       const {startDate, endDate} = queryDateRange;
 
       let sum = 0
+      let startDateMoment = moment(startDate, 'YYYY-MM-DD')
+      let endDateMoment = moment(endDate, 'YYYY-MM-DD')
+      
       budgets.forEach(({ month, amount }, index) => {
-        let budgetMonth = moment(month, 'YYYY-MM');
-
-        let startDateMoment = moment(startDate, 'YYYY-MM-DD')
-        let endDateMoment = moment(endDate, 'YYYY-MM-DD')
         
-        if (!budgetMonth.isBetween(startDateMoment, endDateMoment, 'days', '[]')) {
+        let budgetMonth = moment(month, 'YYYY-MM');        
+        if (!(budgetMonth.year() >= startDateMoment.year() && budgetMonth.year() <= endDateMoment.year())) {
           return;
         }
 
-        if (startDateMoment.diff(budgetMonth, 'months') == 0 && endDateMoment.diff(budgetMonth, 'months') == 0) {
+        if (!(budgetMonth.month() >= startDateMoment.month() && budgetMonth.month() <= endDateMoment.month())) {
+          return;
+        }
+
+        if (startDateMoment.isSame(budgetMonth, 'month') && endDateMoment.isSame(budgetMonth, 'month')) {
           sum += (endDateMoment.diff(startDateMoment, 'days') + 1) / budgetMonth.daysInMonth() * amount;
-        } else if (startDateMoment.diff(budgetMonth, 'months') == 0 && endDateMoment.diff(budgetMonth, 'months') > 0) {
-          sum += amount;
-        } else if (startDateMoment.diff(budgetMonth, 'months') < 0 && endDateMoment.diff(budgetMonth, 'months') == 0) {
+        } else if (startDateMoment.isSame(budgetMonth, 'month') && endDateMoment.diff(budgetMonth, 'months') > 0) {
+          let dailyBudget = (amount / budgetMonth.daysInMonth());
+          sum += dailyBudget * (startDateMoment.daysInMonth() - startDateMoment.date() + 1);
+        } else if (endDateMoment.isSame(budgetMonth, 'month')) {
+          let dailyBudget = (amount / budgetMonth.daysInMonth());
           sum += (endDateMoment.date() / endDateMoment.daysInMonth()) * amount;
-        } else if (startDateMoment.diff(budgetMonth, 'months') < 0 && endDateMoment.diff(budgetMonth, 'months') > 0) {
+        } else if (endDateMoment.diff(budgetMonth, 'months') > 0) {
           sum += amount;
         }
       })
+      
       
       callback(parseInt(sum));
     })

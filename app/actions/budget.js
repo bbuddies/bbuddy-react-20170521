@@ -1,10 +1,13 @@
-import { CALL_API } from '../middleware/api'
+import {CALL_API} from '../middleware/api'
 import * as BudgetConstants from '../constants/budget'
 import {Budget, BudgetList} from '../schemas'
-import {find, merge, values } from 'lodash'
+import {find, merge, values} from 'lodash'
 import moment from 'moment'
+import _ from 'lodash'
+import * as BudgetModel from './budgetModel'
+import * as Period from './periodModel'
 
-export function createBudget(budget){
+export function createBudget(budget) {
   return {
     [CALL_API]: {
       types: [BudgetConstants.ADD_BUDGET_REQUEST, BudgetConstants.ADD_BUDGET_SUCCESS, BudgetConstants.ADD_BUDGET_FAILURE],
@@ -16,7 +19,7 @@ export function createBudget(budget){
   }
 }
 
-export function updateBudget(budget){
+export function updateBudget(budget) {
   return {
     [CALL_API]: {
       types: [BudgetConstants.UPDATE_BUDGET_REQUEST, BudgetConstants.UPDATE_BUDGET_SUCCESS, BudgetConstants.UPDATE_BUDGET_FAILURE],
@@ -28,7 +31,7 @@ export function updateBudget(budget){
   }
 }
 
-export function addBudget(budget, success){
+export function addBudget(budget, success) {
   return (dispatch, getState) => {
     dispatch(fetchBudgets()).then(() => {
       let budgets = getState().entities.budgets
@@ -38,7 +41,7 @@ export function addBudget(budget, success){
   }
 }
 
-export function fetchBudgets(){
+export function fetchBudgets() {
   return {
     [CALL_API]: {
       types: [BudgetConstants.LOAD_BUDGETS_REQUEST, BudgetConstants.LOAD_BUDGETS_SUCCESS, BudgetConstants.LOAD_BUDGETS_FAILURE],
@@ -49,7 +52,7 @@ export function fetchBudgets(){
   }
 }
 
-export function loadBudgets(callback){
+export function loadBudgets(callback) {
   return (dispatch, getState) => {
     dispatch(fetchBudgets()).then(callback)
   }
@@ -64,10 +67,10 @@ export function queryBudgets(queryDateRange, callback) {
       let sum = 0
       let startDateMoment = moment(startDate, 'YYYY-MM-DD')
       let endDateMoment = moment(endDate, 'YYYY-MM-DD')
-      
-      budgets.forEach(({ month, amount }, index) => {
-        
-        let budgetMonth = moment(month, 'YYYY-MM');        
+
+      budgets.forEach(({month, amount}, index) => {
+
+        let budgetMonth = moment(month, 'YYYY-MM');
         if (!(budgetMonth.year() >= startDateMoment.year() && budgetMonth.year() <= endDateMoment.year())) {
           return;
         }
@@ -88,9 +91,25 @@ export function queryBudgets(queryDateRange, callback) {
           sum += amount;
         }
       })
-      
-      
+
+
       callback(parseInt(sum));
+    })
+  }
+}
+
+
+export function sumBudgets(queryDateRange, callback) {
+  return (dispatch, getState) => {
+    dispatch(fetchBudgets()).then(() => {
+      let start = Period.toMoment(queryDateRange.startDate);
+      let end = Period.toMoment(queryDateRange.endDate);
+
+      callback(
+        _(getState().entities.budgets)
+          .values()
+          .sumBy(budget => BudgetModel.overlappingBudget({start, end}, budget))
+      )
     })
   }
 }
